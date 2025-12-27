@@ -63,7 +63,8 @@ class CustomAuthController extends Controller
             $categoriesCount = Categories::count();
             $longueursCount = Longueurs::count();
 
-            $commandesRecentes = Commandes::with('client')
+            $commandesRecentes = Commandes::join('clients', 'commandes.client_id', '=', 'clients.id_client')
+                ->select('commandes.*', 'clients.nom_complet')
                 ->latest()
                 ->take(5)
                 ->get();

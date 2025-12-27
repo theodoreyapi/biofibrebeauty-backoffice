@@ -117,12 +117,22 @@
                     <div class="order-list-item">
                         <div class="d-flex justify-content-between align-items-center w-100">
                             <div>
-                                <strong class="order-ref">{{ $commande->id_commande }}</strong>
-                                <p class="mb-0 text-muted small">{{ $commande->client->nom_client }}</p>
+                                <strong class="order-ref">ORD-{{ $commande->id_commande }}</strong>
+                                <p class="mb-0 text-muted small">{{ $commande->nom_complet }}</p>
                             </div>
                             <div class="text-end">
-                                <span class="text-gold fw-bold">{{ number_format($commande->montant_commande, 0, ',', ' ') }} F CFA</span>
-                                <p class="mb-0 text-muted small">{{ $commande->statut_commande }}</p>
+                                <span
+                                    class="text-gold fw-bold">{{ number_format($commande->montant_produit, 0, ',', ' ') }}
+                                    F CFA</span>
+                                <p class="mb-0 text-muted small">
+                                    @if ($commande->statut_commande == 'pending')
+                                        En attente
+                                    @elseif ($commande->statut_commande == 'completed')
+                                        Livrer
+                                    @else
+                                        Annuler
+                                    @endif
+                                </p>
                             </div>
                         </div>
                     </div>

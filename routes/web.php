@@ -31,3 +31,4 @@ Route::resource('stocks', StocksController::class);
 Route::post('/produits/{id}/update-stock', [StocksController::class, 'updateStock'])
     ->name('produits.updateStock');
 
+Route::post('/commandes/{id}/statut', [CommandesController::class, 'updateStatut']);

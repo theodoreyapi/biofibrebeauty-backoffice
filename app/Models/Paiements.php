@@ -16,4 +16,9 @@ class Paiements extends Model
     protected $table = 'paiements';
 
     protected $primaryKey = 'id_paiement';
+
+     public function commande()
+    {
+        return $this->belongsTo(Commandes::class, 'commande_id', 'id_commande');
+    }
 }
