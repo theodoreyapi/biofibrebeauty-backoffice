@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Produits extends Model
 {
     protected $fillable = [
-        'image_produit',
         'nom_produit',
         'couleur_produit',
         'description_produit',
@@ -21,4 +20,9 @@ class Produits extends Model
     protected $table = 'produits';
 
     protected $primaryKey = 'id_produit';
+
+    public function images()
+    {
+        return $this->hasMany(ProduitImage::class, 'produit_id', 'id_produit');
+    }
 }

@@ -20,15 +20,16 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="admin-product-card">
                             <div class="image-wrapper">
-                                <img src="{{ $item->image_produit == '' ? 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=800' : $item->image_produit }}"
+                                {{-- Dans la boucle @foreach --}}
+                                @php $firstImage = $item->images->first(); @endphp
+                                <img src="{{ $firstImage ? $firstImage->image_produit : 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=800' }}"
                                     alt="{{ $item->nom_produit }}" class="admin-product-img">
                             </div>
                             <div class="p-3">
                                 <h5 class="fw-bold mb-1">{{ $item->nom_produit }}</h5>
                                 <p class="text-muted small mb-3">
                                     {{ \Illuminate\Support\Str::limit($item->description_produit, 115) }}</p>
-                                <p class="text-gold fw-bold mb-1">{{ number_format($item->prix_produit, 0, ',', ' ') }} F
-                                    CFA</p>
+                                <p class="text-gold fw-bold mb-1">{{ number_format($item->prix_produit, 0, ',', ' ') }} CHF</p>
                                 <p class="text-muted small mb-3">{{ $item->nom_categorie }} • {{ $item->valeur_longueur }} •
                                     {{ $item->couleur_produit }}</p>
                                 <div class="d-flex gap-2">
@@ -67,7 +68,7 @@
                                         </div>
                                         <div class="row g-3">
                                             <div class="col-6">
-                                                <label class="form-label-sm">Prix (FCFA) <span
+                                                <label class="form-label-sm">Prix (CHF) <span
                                                         class="text-danger">*</span></label>
                                                 <input type="number" name="prix" required class="input-checkout"
                                                     value="{{ $item->prix_produit }}">
@@ -111,10 +112,34 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        {{-- Images existantes --}}
+                                        <div class="mb-3">
+                                            <label class="form-label-sm">Images actuelles</label>
+                                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                                @foreach ($item->images as $img)
+                                                    <div class="position-relative" style="width:80px;">
+                                                        <img src="{{ $img->image_produit }}" class="img-thumbnail"
+                                                            style="width:80px; height:80px; object-fit:cover;">
+                                                        <div class="form-check mt-1">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="delete_images[]"
+                                                                value="{{ $img->id_produit_image }}"
+                                                                id="del_img_{{ $img->id_produit_image }}">
+                                                            <label class="form-check-label text-danger small"
+                                                                for="del_img_{{ $img->id_produit_image }}">
+                                                                Supprimer
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+
+                                        {{-- Ajouter de nouvelles images --}}
                                         <div class="mb-4">
-                                            <label class="form-label-sm">Image <span class="text-danger">*</span></label>
-                                            <input name="image" type="file" class="input-checkout"
-                                                placeholder="Choisir une image">
+                                            <label class="form-label-sm">Ajouter des images</label>
+                                            <input name="images[]" type="file" multiple accept="image/*"
+                                                class="input-checkout">
                                         </div>
                                         <button type="submit" class="btn btn-secondary w-100 py-3 mt-2">Modifier</button>
                                     </form>
@@ -174,8 +199,8 @@
                         </div>
                         <div class="row g-3">
                             <div class="col-6">
-                                <label class="form-label-sm">Prix (FCFA) <span class="text-danger">*</span></label>
-                                <input type="number" name="prix" required class="input-checkout" value="0">
+                                <label class="form-label-sm">Prix (CHF) <span class="text-danger">*</span></label>
+                                <input type="number" name="prix" required class="input-checkout">
                             </div>
                             <div class="col-6">
                                 <label class="form-label-sm">Couleur <span class="text-danger">*</span></label>
@@ -207,9 +232,12 @@
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label-sm">Image <span class="text-danger">*</span></label>
-                            <input name="image" required type="file" class="input-checkout"
-                                placeholder="Choisir une image">
+                            <label class="form-label-sm">
+                                Images <span class="text-danger">*</span>
+                            </label>
+                            <input name="images[]" required type="file" multiple accept="image/*"
+                                class="input-checkout">
+                            <em class="text-primary">Vous pouvez sélectionner plusieurs images</em>
                         </div>
                         <button type="submit" class="btn btn-dark-custom w-100 py-3 mt-2">Ajouter</button>
                     </form>

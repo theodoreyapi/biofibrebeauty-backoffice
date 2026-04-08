@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('produits', function (Blueprint $table) {
             $table->id('id_produit')->primary();
-            $table->string('image_produit');
             $table->string('nom_produit');
             $table->string('couleur_produit');
             $table->text('description_produit')->nullable();
@@ -26,6 +25,14 @@ return new class extends Migration
             $table->foreign('longueur_id')->references('id_longueur')->on('longueurs');
             $table->timestamps();
         });
+
+        Schema::create('produit_image', function (Blueprint $table) {
+            $table->id('id_produit_image')->primary();
+            $table->string('image_produit');
+            $table->unsignedBigInteger('produit_id');
+            $table->foreign('produit_id')->references('id_produit')->on('produits');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -34,10 +41,15 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('produits');
+        Schema::dropIfExists('produit_image');
         Schema::table('produits', function (Blueprint $table) {
             $table->dropForeign(['categorie_id', 'longueur_id']);
             $table->dropColumn('categorie_id');
             $table->dropColumn('longueur_id');
+        });
+        Schema::table('produit_image', function (Blueprint $table) {
+            $table->dropForeign(['produit_id']);
+            $table->dropColumn('produit_id');
         });
     }
 };
